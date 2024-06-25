@@ -2,15 +2,15 @@ package com.aluracursos.screenmatch.principal;
 
 import com.aluracursos.screenmatch.model.DatosSerie;
 import com.aluracursos.screenmatch.model.DatosTemporadas;
+import com.aluracursos.screenmatch.model.Serie;
 import com.aluracursos.screenmatch.service.ConsumoAPI;
 import com.aluracursos.screenmatch.service.ConvierteDatos;
 import io.github.cdimascio.dotenv.Dotenv;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Principal {
     private final Scanner teclado = new Scanner(System.in);
@@ -31,28 +31,31 @@ public class Principal {
                     0 - Salir
                     """;
             System.out.println(menu);
-            opcion = teclado.nextInt();
-            teclado.nextLine();
+            String entradaUsuario = teclado.nextLine();
+            try {
+                opcion = Integer.parseInt(entradaUsuario);
+            } catch (NumberFormatException e) {
+                System.out.println("Ingrese un valor numérico.");
+                opcion = -1;
+            }
 
             switch (opcion) {
                 case 1:
                     buscarSerieWeb();
-                    break;
+                break;
                 case 2:
                     buscarEpisodioPorSerie();
-                    break;
+                break;
                 case 3:
                     mostrarSeriesBuscadas();
-                    break;
-
+                break;
                 case 0:
                     System.out.println("Cerrando la aplicación...");
-                    break;
+                break;
                 default:
-                    System.out.println("Opción inválida");
+                    System.out.println("Opción inválida\n");
             }
         }
-
     }
 
     private DatosSerie getDatosSerie() {
@@ -81,7 +84,20 @@ public class Principal {
     }
 
     private void mostrarSeriesBuscadas() {
-        datosSeries.forEach(System.out::println);
+
+        List<Serie> series = new ArrayList<>();
+        series = datosSeries.stream()
+                .map(Serie::new)
+                .collect(Collectors.toList());
+
+        try {
+            series.stream()
+                    .sorted(Comparator.comparing(Serie::getGenero))
+                    .forEach(System.out::println);
+        } catch (IllegalArgumentException e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
 
