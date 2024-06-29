@@ -228,13 +228,12 @@ public class Principal {
             Serie serie = serieBuscada.get();
             List<Episodio> topEpisodios = serieRepository.topCincoEpisodios(serie);
             System.out.print("\n* Serie: " + serie.getTitulo());
-            int index = 0;
             topEpisodios.forEach( episodio ->
-                    System.out.printf("\n\t(%d) Titulo: %s " +
+                    System.out.printf("\n\t- Titulo: %s " +
                             "\n\t  Temporada: %d" +
                             "\n\t  Numero de episodio: %d" +
                             "\n\t  Fecha de lanzamiento: %s" +
-                            "\n\t  Evaluacion: %02f\n", index++, episodio.getTitulo(), episodio.getTemporada(),
+                            "\n\t  Evaluacion: %02f\n", episodio.getTitulo(), episodio.getTemporada(),
                             episodio.getNumeroEpisodio(), episodio.getFechaDeLanzamiento(), episodio.getEvaluacion()));
         }
 
