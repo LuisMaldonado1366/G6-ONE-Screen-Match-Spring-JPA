@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import net.suuft.libretranslate.Language;
 import net.suuft.libretranslate.Translator;
 
+import java.util.List;
 import java.util.OptionalDouble;
 
 @Entity
@@ -21,6 +22,13 @@ public class Serie {
     private Categoria genero;
     private String actores;
     private String sinopsis;
+
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Episodio> episodios;
+
+    public Serie() {
+
+    }
 
     public Serie(DatosSerie datosSerie) {
         this.titulo = datosSerie.titulo();
@@ -96,6 +104,15 @@ public class Serie {
         this.sinopsis = sinopsis;
     }
 
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        episodios.forEach(episodio -> episodio.setSerie(this));
+        this.episodios = episodios;
+    }
+
     @Override
     public String toString() {
         return  "genero='" + genero + '\'' +
@@ -104,6 +121,7 @@ public class Serie {
                 ", evaluacion=" + evaluacion +
                 ", poster='" + poster + '\'' +
                 ", actores='" + actores + '\'' +
-                ", sinopsis='" + sinopsis;
+                ", sinopsis='" + sinopsis  + '\'' +
+                ", episodios='" + episodios;
     }
 }
