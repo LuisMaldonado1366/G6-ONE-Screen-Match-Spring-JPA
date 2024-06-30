@@ -11,7 +11,7 @@ public class CorsConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         Dotenv dotenv = Dotenv.load();
-        String URL_APP = "http://"+dotenv.get("APP_HOST")+":" + dotenv.get("APP_PORT");
+        String URL_APP = dotenv.get("URL_APP");
         registry.addMapping("/**")
                 .allowedOrigins(URL_APP)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
