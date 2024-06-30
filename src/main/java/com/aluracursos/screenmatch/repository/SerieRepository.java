@@ -1,10 +1,12 @@
 package com.aluracursos.screenmatch.repository;
 
+import com.aluracursos.screenmatch.dto.EpisodioDTO;
 import com.aluracursos.screenmatch.model.Categoria;
 import com.aluracursos.screenmatch.model.Episodio;
 import com.aluracursos.screenmatch.model.Serie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +23,15 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
     @Query("SELECT e, s.titulo FROM Serie s JOIN s.episodios e WHERE e.titulo ILIKE %:nombreEpisodio%")
     List<Episodio> episodiosPorNombre(String nombreEpisodio);
 
-    @Query("SELECT e FROM Serie AS s JOIN s.episodios AS e WHERE s = :serie ORDER BY e.evaluacion DESC LIMIT 5")
+    @Query("SELECT DISTINCT e FROM Serie AS s JOIN s.episodios AS e WHERE s = :serie ORDER BY e.evaluacion DESC LIMIT 5")
     List<Episodio> topCincoEpisodios(Serie serie);
 
     @Query("SELECT s FROM Serie AS s JOIN s.episodios AS e GROUP BY s ORDER BY MAX(e.fechaDeLanzamiento) DESC LIMIT 5")
     List<Serie> lanzamientosMasrecientes();
+
+    @Query("SELECT e FROM Serie AS s JOIN s.episodios AS e WHERE s.id = :id AND e.temporada = :numeroTemporada")
+    List<Episodio> obtenerTemporadasPorNumero(Long id, Long numeroTemporada);
+
+    @Query("SELECT s FROM Serie AS s WHERE s.genero = :nombreGenero")
+    List<Serie> obtenerSeriesPorCategoria(String nombreGenero);
 }
